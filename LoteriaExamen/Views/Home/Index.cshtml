@@ -1,0 +1,74 @@
+﻿
+@{
+    ViewBag.Title = "Loteria mexicana";
+}
+
+<h2>Index</h2>
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+    <div class="input-group mb-3">
+        <input type="number" class="form-control" id="gtNm" placeholder="Cantidad de tablas" aria-label="Cantidad de tablas" aria-describedby="button-addon2">
+        <button class="btn btn-outline-secondary" type="button" id="button-addon2" onclick="sendData()">Enviar</button>
+    </div>
+
+    <div>
+        <table class="table table-striped">
+            <thead id="head">
+                
+            </thead>
+            <tbody id="body">
+               
+            </tbody>
+        </table>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="~/scripts/jquery.js"></script>
+    <script>
+        function sendData() {
+            var html = '';
+             total = $("#gtNm").val();
+            $.ajax({
+                type: "GET",
+                url: "/home/getTablas",
+                data: {total: total },
+                contentType: "application/json; charset=utf-8",
+                success: function (result) {
+                    var arr = result.result;
+                    var tabla = result.tabla;
+
+                    console.log(arr);
+                    console.log(arr.size);
+                    console.log(tabla.length);
+
+                    for (let key in arr) {
+                        console.log(`Name of the object: ${key}`);
+
+                       
+
+                        arr[key].forEach((obj) => {
+                            console.log(`Object name: ${obj.Imagen}`);
+
+                            let bdy =  
+                                '<tr>' +
+                                '<td> <img src="' + obj.Imagen + '" class="img-fluid img-thumbnail" alt="'+obj.Nombre+'"></td>' +
+                                 '</tr>'
+                            $("#body").append(bdy)
+
+                        });
+
+                        let thheader = '<tr id="head">' +
+                            '<th scope ="col" > ' + key + '</th> ' +
+                            '</tr >'
+                           
+                        $("#head").append(thheader)
+                    }
+                }
+            })
+        }
+    </script>
+</body>
